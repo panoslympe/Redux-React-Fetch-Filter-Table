@@ -1,0 +1,57 @@
+.Table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 1200px;
+}
+
+.Table > thead,
+.Table > tbody{
+ max-width: 33%;
+}
+
+.Table td,
+.Table td {
+  border: 1px solid gray;
+  text-align: left;
+  padding: 8px;
+}
+
+.Table tr:nth-child(even) {
+  background-color: white;
+}
+
+.Filters {
+  margin: 30px;
+  margin-bottom: 50px;
+  display: flex;
+  justify-content: space-around;
+  padding: 50px 0;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.Loader {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Sad {
+  position: absolute;
+  z-index: -1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  color: black;
+  font-size: 5rem;
+  border:1px solid red;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  text-align: center;
+}
+
