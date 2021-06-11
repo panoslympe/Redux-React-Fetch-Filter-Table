@@ -16,7 +16,7 @@ const Main = () => {
     const [categories, setCategories] = useState([]);
 
 
-    //fetch data from public API
+    //fetch data from public API using redux
     useEffect(() => {
         dispatch(fetchTableData());
     }, []);
@@ -48,7 +48,7 @@ const Main = () => {
     //report elements found
     const found = <h1 style={{ textAlign: 'center' }}>Found: {displayData.length} elements for your search!</h1>;
 
-    //show spinner depending of if there are data or not
+
     const spinner = <div className={classes.SpinnerContainer}><div className="Spinner"></div></div>
 
     return (
@@ -70,9 +70,15 @@ const Main = () => {
             </div>
 
             {data.length ?
-                <>{found}  <Table displayData={displayData} /></>
+                <>
+                    {found}
+                    <Table displayData={displayData} />
+                </>
                 :
-                <><h1 style={{ textAlign: 'center' }}>Loading...</h1>  {spinner}</>}
+                <>
+                    <h1 style={{ textAlign: 'center' }}>Loading...</h1>
+                    {spinner}
+                </>}
         </div>
     )
 }
