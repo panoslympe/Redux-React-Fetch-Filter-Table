@@ -1,0 +1,38 @@
+.Table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: 1200px;
+  }
+
+  .Table > thead{
+      background-color: black;
+      color: white;
+  }
+  
+  .Table > thead,
+  .Table > tbody{
+   max-width: 100%;
+   width: 100%;
+  }
+
+  .Table > thead > tr{
+   max-width: 100%;
+   width: 100%;
+  }
+  
+  .Table th,
+  .Table td {
+    border: 1px solid gray;
+    text-align: left;
+    width: 33%;
+    padding: 8px;
+  }
+  
+  .Table tr:nth-child(even) {
+    background-color: lightgray;
+  }
+
+  .Sad {
+      font-size: 7rem;
+      text-align: center;
+  }

@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 import classes from './Main.module.css';
+import { useSelector, useDispatch } from "react-redux";
+import { fetchTableData } from '../store/slice';
+import Table from './Table/Table';
+import Filter from './Filter/Filter';
+
+
 
 const Main = () => {
-    const [data, setData] = useState([]);
+    const dispatch = useDispatch();
+    const data = useSelector(state => state.reducerData.data);
     const [filteredData, setFilterData] = useState([]);
     const [search, setSearch] = useState();
     const [selectedCategory, setSelectedCategory] = useState();
@@ -12,17 +18,13 @@ const Main = () => {
 
     //fetch data from public API
     useEffect(() => {
-        axios.get('https://api.publicapis.org/entries')
-            .then(res => {
-                setData(res.data.entries);
-
-                //remove duplicates and set Caregories
-                const categories = [...new Set(res.data.entries.map(entry => entry.Category))];
-                setCategories(categories);
-
-            })
-            .catch(err => console.log(err))
+        dispatch(fetchTableData());
     }, []);
+
+    useEffect(() => {
+        const categories = [...new Set(data.map(entry => entry.Category))];
+        setCategories(categories);
+    }, [data]);
 
     //filter effect for both inputs
     useEffect(() => {
@@ -34,7 +36,7 @@ const Main = () => {
 
         if (search) {
             filtersResult = filtersResult.filter(each => each.API.toLowerCase().includes(search.toLowerCase()) || each.Description.toLowerCase().includes(search.toLowerCase()));
-                    }
+        }
 
         setFilterData(filtersResult);
     }, [selectedCategory, search, data]);
@@ -44,63 +46,36 @@ const Main = () => {
     const displayData = filteredData.length ? filteredData : (search ? [] : data);
 
     //report elements found
-    const found =  <h1 style={{ textAlign: 'center' }}>Found: {displayData.length} elements for your search!</h1> ;
-
-    const table = displayData.length ? <>{displayData.map((entry, index) => <tr key={`${index}-${entry.desc}`}>
-    <td>{entry.API}</td>
-    <td>{entry.Category}</td>
-    <td>{entry.Description}</td>
-</tr>)}</> : <div className={classes.Sad}>:(</div>
+    const found = <h1 style={{ textAlign: 'center' }}>Found: {displayData.length} elements for your search!</h1>;
 
     //show spinner depending of if there are data or not
-    const spinner = search ? table : <div className={classes.Loader}><div className="spinner"></div></div>
+    const spinner = <div className={classes.SpinnerContainer}><div className="Spinner"></div></div>
 
     return (
         <div className={classes.Main}>
             <div className={classes.Filters}>
-                <div>
-                    <h4>Search (for both API &amp; Description)</h4>
-                    <input
-                        type="text"
-                        name="search"
-                        placeholder="Search"
-                        onChange={e => setSearch(e.target.value)} />
-                </div>
-                <div>
-                    <h4>Select category</h4>
-                    <select onChange={e => setSelectedCategory(e.target.value)}>
-                        <option key="null" >-------</option>
-                        {categories.map(categ => <option key={categ} value={categ}>{categ}</option>)}
-                    </select>
 
-                </div>
+                <Filter
+                    title="Search (for both API &amp; Description)"
+                    type="input"
+                    liftingUp={e => setSearch(e)} />
+
+                <Filter
+                    title="Category"
+                    type="select"
+                    liftingUp={e => setSelectedCategory(e)}
+                    options={categories}
+                />
 
             </div>
-            {found}
-            <table className={classes.Table}>
-                <thead>
-                    <tr>
-                        <th>API</th>
-                        <th>Category</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
 
-                {displayData.length ?
-                    <tbody>
-                        {displayData.map((entry, index) => <tr key={`${index}-${entry.desc}`}>
-                            <td>{entry.API}</td>
-                            <td>{entry.Category}</td>
-                            <td>{entry.Description}</td>
-                        </tr>)}
-                    </tbody>
-                    : spinner}
-
-
-
-            </table>
+            {data.length ?
+                <>{found}  <Table displayData={displayData} /></>
+                :
+                <><h1 style={{ textAlign: 'center' }}>Loading...</h1>  {spinner}</>}
         </div>
     )
 }
 
 export default Main;
+
